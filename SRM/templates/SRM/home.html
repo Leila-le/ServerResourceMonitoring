@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Monitor</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+<h1>Server Monitor</h1>
+<p>CPU usage:{{ cpu_percent }}%</p>
+<p>Memory usage:{{ Memory_percent }}%</p>
+<p>Disk usage:{{ Disk_percent }}%</p>
+</body>
+</html>

@@ -1,0 +1,139 @@
+ 
+要编写一个服务器状态监控应用，可以利用Python和Django框架来实现。以下是一些基本的步骤和代码示例，供您参考。
+
+    安装Django
+
+在开始编写代码之前，首先需要安装Django。可以使用以下命令在终端中安装Django：
+
+pip install django
+
+    创建Django项目和应用
+
+在安装Django后，可以使用以下命令创建Django项目：
+
+django-admin startproject projectname
+
+其中，projectname是您的项目名称。创建项目后，可以使用以下命令创建应用：
+
+python manage.py startapp appname
+
+其中，appname是您的应用程序名称。
+
+    配置URL
+
+要配置URL，可以打开projectname文件夹中的urls.py文件，并添加以下代码：
+python
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+]
+
+这将创建一个URL路径，将其与views.py中的home函数关联起来，并命名为“home”。
+
+    编写视图
+
+在appname文件夹中创建views.py文件，并添加以下代码：
+python
+
+from django.shortcuts import render
+import psutil
+
+def home(request):
+    cpu_percent = psutil.cpu_percent()
+    memory_percent = psutil.virtual_memory().percent
+    disk_percent = psutil.disk_usage('/').percent
+    return render(request, 'home.html', {'cpu_percent': cpu_percent, 'memory_percent': memory_percent, 'disk_percent': disk_percent})
+
+这个视图函数会使用psutil库来获取CPU、内存和磁盘使用率，并将这些数据传递到名为home.html的模板中。
+
+    编写模板
+
+在appname/templates文件夹中创建名为home.html的文件，并添加以下代码：
+html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Monitor</title>
+</head>
+<body>
+    <h1>Server Monitor</h1>
+    <p>CPU usage: {{ cpu_percent }}%</p>
+    <p>Memory usage: {{ memory_percent }}%</p>
+    <p>Disk usage: {{ disk_percent }}%</p>
+</body>
+</html>
+
+这个模板将显示CPU、内存和磁盘使用率。
+
+    运行服务器
+
+使用以下命令在终端中运行服务器：
+
+python manage.py runserver
+
+    查看结果
+
+在浏览器中访问http://127.0.0.1:8000/，您应该能够看到服务器状态监控应用的首页，其中包含CPU、内存和磁盘使用率的信息。
+
+这只是一个简单的示例，您可以根据自己的需求来扩展它。
+
+要将服务器状态发送给钉钉，您需要使用钉钉机器人API来实现。以下是一些基本的步骤和代码示例，供您参考。
+
+    创建钉钉机器人
+
+要使用钉钉机器人API，首先需要创建一个钉钉机器人。具体步骤如下：
+
+    打开钉钉工作台
+    点击工作台右上角的“设置”按钮
+    选择“机器人管理”
+    选择“自定义”机器人
+    为机器人取一个名称，并选择要发送消息的群或个人
+    生成一个Webhook地址，用于发送消息
+
+    安装钉钉机器人SDK
+
+在开始编写代码之前，需要安装钉钉机器人SDK。可以使用以下命令在终端中安装SDK：
+
+pip install dingtalk-sdk
+
+    编写代码
+
+在views.py中添加以下代码：
+python
+
+from django.shortcuts import render
+from dingtalkchatbot.chatbot import DingtalkChatbot
+import psutil
+
+def home(request):
+    # 获取服务器状态
+    cpu_percent = psutil.cpu_percent()
+    memory_percent = psutil.virtual_memory().percent
+    disk_percent = psutil.disk_usage('/').percent
+
+    # 发送钉钉消息
+    webhook = 'your_webhook_url_here'
+    secret = 'your_secret_here'
+    xiaoding = DingtalkChatbot(webhook, secret=secret)
+    message = f"CPU usage: {cpu_percent}%\nMemory usage: {memory_percent}%\nDisk usage: {disk_percent}%"
+    xiaoding.send_text(msg=message, is_at_all=False)
+
+    return render(request, 'home.html', {'cpu_percent': cpu_percent, 'memory_percent': memory_percent, 'disk_percent': disk_percent})
+
+其中，your_webhook_url_here是您的钉钉机器人Webhook地址，your_secret_here是您的钉钉机器人密钥。
+
+这个视图函数会使用psutil库来获取CPU、内存和磁盘使用率，并将这些数据发送到钉钉机器人。然后，它会将这些数据传递到名为home.html的模板中。
+
+    运行服务器并查看结果
+
+使用以下命令在终端中运行服务器：
+
+python manage.py runserver
+
+在浏览器中访问http://127.0.0.1:8000/，您应该能够看到服务器状态监控应用的首页，其中包含CPU、内存和磁盘使用率的信息。同时，您的钉钉机器人应该会收到一条消息，其中包含相同的信息。
+
+这只是一个简单的示例，您可以根据自己的需求来扩展它。
